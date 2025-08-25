@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Report Incident</title>
+</head>
+<body>
+  <h2>🚨 Report an Incident</h2>
+  <form id="incidentForm">
+    <input type="text" id="type" placeholder="Type (Fire, Accident...)" required><br>
+    <input type="text" id="location" placeholder="Location" required><br>
+    <textarea id="details" placeholder="Details"></textarea><br>
+    <button type="submit">Submit</button>
+  </form>
+
+  <!-- Firebase v8 SDKs (✅ correct for initializeApp style) -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-analytics.js"></script>
+
+  <script>
+    // Your Firebase config
+    const firebaseConfig = {
+      apiKey: "AIzaSyCtl1lYb1SF8yZ8wHlNLd1wfz6izSIoA8k",
+      authDomain: "hack-9259a.firebaseapp.com",
+      databaseURL: "https://hack-9259a-default-rtdb.firebaseio.com",
+      projectId: "hack-9259a",
+      storageBucket: "hack-9259a.firebasestorage.app",
+      messagingSenderId: "196459107025",
+      appId: "1:196459107025:web:b5a7a0d3ccd637a327abf0",
+      measurementId: "G-G4T8NB6ZK3"
+    };
+
+    // Initialize Firebase (v8 syntax)
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+    firebase.analytics();
+
+    // Handle form submission
+    const form = document.getElementById("incidentForm");
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      let type = document.getElementById("type").value;
+      let location = document.getElementById("location").value;
+      let details = document.getElementById("details").value;
+
+      db.ref("incidents").push({
+        type: type,
+        location: location,
+        details: details,
+        timestamp: new Date().toISOString()
+      }).then(() => {
+        alert("✅ Incident submitted!");
+        form.reset();
+      }).catch((error) => {
+        alert("❌ Error: " + error.message);
+      });
+    });
+  </script>
+</body>
+</html>

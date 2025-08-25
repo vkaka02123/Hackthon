@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>View Reported Incidents</title>
+</head>
+<body>
+  <h2>📋 Reported Incidents</h2>
+  <ul id="incidentList"></ul>
+
+  <!-- Firebase v8 SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-analytics.js"></script>
+
+  <script>
+    // Your Firebase config
+    const firebaseConfig = {
+      apiKey: "AIzaSyCtl1lYb1SF8yZ8wHlNLd1wfz6izSIoA8k",
+      authDomain: "hack-9259a.firebaseapp.com",
+      databaseURL: "https://hack-9259a-default-rtdb.firebaseio.com",
+      projectId: "hack-9259a",
+      storageBucket: "hack-9259a.firebasestorage.app",
+      messagingSenderId: "196459107025",
+      appId: "1:196459107025:web:b5a7a0d3ccd637a327abf0",
+      measurementId: "G-G4T8NB6ZK3"
+    };
+
+    // Initialize Firebase
+    const app = firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+    const analytics = firebase.analytics();
+
+    // Get list element
+    const incidentList = document.getElementById("incidentList");
+
+    // Listen for new incidents
+    db.ref("incidents").on("value", (snapshot) => {
+      incidentList.innerHTML = ""; // clear old list
+      snapshot.forEach((childSnapshot) => {
+        const incident = childSnapshot.val();
+        let li = document.createElement("li");
+        li.textContent = `🚨 ${incident.type} at ${incident.location} — ${incident.details} (Time: ${incident.timestamp})`;
+        incidentList.appendChild(li);
+      });
+    });
+  </script>
+</body>
+</html>
