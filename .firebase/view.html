@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>View Submitted Codes</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 30px; text-align: center; }
+    input { padding: 10px; margin: 5px; font-size: 16px; }
+    button { padding: 10px 20px; font-size: 16px; margin-top: 10px; cursor: pointer; }
+  </style>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyCL8AMNwg0UBtZVeMliWGDud4PJBsG9-BE",
+      authDomain: "school-project-prank.firebaseapp.com",
+      databaseURL: "https://school-project-prank-default-rtdb.firebaseio.com",
+      projectId: "school-project-prank",
+      storageBucket: "school-project-prank.firebasestorage.app",
+      messagingSenderId: "454638524060",
+      appId: "1:454638524060:web:56768951cca73db5073f59"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.database();
+
+    function login() {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      auth.signInWithEmailAndPassword(email, password)
+        .then(() => {
+          document.getElementById("loginSection").style.display = "none";
+          document.getElementById("dataSection").style.display = "block";
+
+          db.ref("codes").on("value", (snapshot) => {
+            const codeList = document.getElementById("codeList");
+            codeList.innerHTML = "";
+            snapshot.forEach((child) => {
+              const li = document.createElement("li");
+              li.textContent = child.val().code;
+              codeList.appendChild(li);
+            });
+          });
+        })
+        .catch(error => alert("Login failed: " + error.message));
+    }
+
+    window.login = login;
+  </script>
+</head>
+<body>
+  <div id="loginSection">
+    <h2>Admin Login</h2>
+    <input type="email" id="email" placeholder="Email"><br>
+    <input type="password" id="password" placeholder="Password"><br>
+    <button onclick="login()">Login</button>
+  </div>
+
+  <div id="dataSection" style="display:none;">
+    <h2>Submitted Codes</h2>
+    <ul id="codeList"></ul>
+  </div>
+</body>
+</html>
